@@ -1,0 +1,16 @@
+{
+	"user": "ScavengeSurvive",
+	"repo": "craft",
+	"entry": "test.pwn",
+	"output": "test.amx",
+	"dependencies": [
+		"sampctl/samp-stdlib",
+		"Southclaws-samp-logger",
+		"pawn-lang/YSI-Includes",
+		"ScavengeSurvive/item",
+		"ScavengeSurvive/inventory",
+		"ScavengeSurvive/container",
+		"ScavengeSurvive/inventory-dialog",
+		"ScavengeSurvive/container-dialog"
+	]
+}
