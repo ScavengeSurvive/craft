@@ -18,7 +18,7 @@
 #include <inventory-dialog>
 #include <container-dialog>
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 
 // CRAFT_MAX_CRAFT_SET controls the total amount of "craft-sets" which are individual recipes for
@@ -186,8 +186,8 @@ stock CraftSet:DefineItemCraftSet(ItemType:result, {ItemType, bool}:...) {
 		args = numargs();
 
 	if(!(args & 1)) {
-		err("DefineItemCraftSet has invalid parameter structure. Should be: result, (item, keep) * n",
-			_i("result", _:result));
+		Logger_Err("DefineItemCraftSet has invalid parameter structure. Should be: result, (item, keep) * n",
+			Logger_I("result", _:result));
 		return INVALID_CRAFTSET;
 	}
 
@@ -469,11 +469,11 @@ _craft_AddItemToCraftList(playerid, Item:itemid) {
 	new itemname[MAX_ITEM_NAME];
 	GetItemTypeName(GetItemType(itemid), itemname);
 
-	dbg("craft", "_craft_AddItemToCraftList",
-		_i("playerid", playerid),
-		_i("itemid", _:itemid),
-		_i("itemtype", _:GetItemType(itemid)),
-		_s("itemname", itemname));
+	Logger_Dbg("craft", "_craft_AddItemToCraftList",
+		Logger_I("playerid", playerid),
+		Logger_I("itemid", _:itemid),
+		Logger_I("itemtype", _:GetItemType(itemid)),
+		Logger_S("itemname", itemname));
 
 	craft_SelectedItems[playerid][craft_SelectedItemCount[playerid]][craft_selectedItemType] = GetItemType(itemid);
 	craft_SelectedItems[playerid][craft_SelectedItemCount[playerid]][craft_selectedItemID] = itemid;
@@ -493,17 +493,17 @@ _craft_AddItemToCraftList(playerid, Item:itemid) {
 }
 
 _craft_ClearCraftList(playerid) {
-	dbg("craft", "_craft_ClearCraftList",
-		_i("playerid", playerid));
+	Logger_Dbg("craft", "_craft_ClearCraftList",
+		Logger_I("playerid", playerid));
 
 	craft_SelectionEnvironment[playerid] = CRAFT_ENVIRONMENT_NONE;
 	craft_SelectedItemCount[playerid] = 0;
 }
 
 _craft_CraftSelected(playerid, CraftSet:craftset) {
-	dbg("craft", "_craft_CraftSelected",
-		_i("playerid", playerid),
-		_i("craftset", _:craftset));
+	Logger_Dbg("craft", "_craft_CraftSelected",
+		Logger_I("playerid", playerid),
+		Logger_I("craftset", _:craftset));
 
 	new
 		resultslots,
@@ -534,14 +534,14 @@ _craft_CraftSelected(playerid, CraftSet:craftset) {
 		}
 
 		for(new i; i < craft_SelectedItemCount[playerid]; i++) {
-			dbg("craft", "_craft_CraftSelected looping ingredient item",
-				_i("itemid", _:craft_SelectedItems[playerid][i][craft_selectedItemID]),
-				_i("itemtype", _:GetItemType(craft_SelectedItems[playerid][i][craft_selectedItemID])));
+			Logger_Dbg("craft", "_craft_CraftSelected looping ingredient item",
+				Logger_I("itemid", _:craft_SelectedItems[playerid][i][craft_selectedItemID]),
+				Logger_I("itemtype", _:GetItemType(craft_SelectedItems[playerid][i][craft_selectedItemID])));
 
 			if(!craft_Ingredients[craftset][i][craft_keepItem]) {
-				dbg("craft", "_craft_CraftSelected destroying ingredient item",
-					_i("itemid", _:craft_SelectedItems[playerid][i][craft_selectedItemID]),
-					_i("itemtype", _:GetItemType(craft_SelectedItems[playerid][i][craft_selectedItemID])));
+				Logger_Dbg("craft", "_craft_CraftSelected destroying ingredient item",
+					Logger_I("itemid", _:craft_SelectedItems[playerid][i][craft_selectedItemID]),
+					Logger_I("itemtype", _:GetItemType(craft_SelectedItems[playerid][i][craft_selectedItemID])));
 
 				GetItemPlayerInventorySlot(craft_SelectedItems[playerid][i][craft_selectedItemID], slot);
 				RemoveItemFromInventory(playerid, slot, 0);
@@ -550,14 +550,14 @@ _craft_CraftSelected(playerid, CraftSet:craftset) {
 		}
 
 		new Item:itemid = CreateItem(craft_Result[craftset]);
-		dbg("craft", "_craft_CraftSelected created result item",
-			_i("itemid", _:itemid),
-			_i("result", _:craft_Result[craftset]));
+		Logger_Dbg("craft", "_craft_CraftSelected created result item",
+			Logger_I("itemid", _:itemid),
+			Logger_I("result", _:craft_Result[craftset]));
 
 		AddItemToInventory(playerid, itemid, false);
-		dbg("craft", "_craft_CraftSelected added result item to player",
-			_i("itemid", _:itemid),
-			_i("playerid", playerid));
+		Logger_Dbg("craft", "_craft_CraftSelected added result item to player",
+			Logger_I("itemid", _:itemid),
+			Logger_I("playerid", playerid));
 
 		CallLocalFunction("OnPlayerCrafted", "ddd", playerid, _:craftset, _:itemid);
 	} else {
@@ -580,14 +580,14 @@ _craft_CraftSelected(playerid, CraftSet:craftset) {
 		}
 
 		for(new i; i < craft_SelectedItemCount[playerid]; i++) {
-			dbg("craft", "_craft_CraftSelected looping ingredient item",
-				_i("itemid", _:craft_SelectedItems[playerid][i][craft_selectedItemID]),
-				_i("itemtype", _:GetItemType(craft_SelectedItems[playerid][i][craft_selectedItemID])));
+			Logger_Dbg("craft", "_craft_CraftSelected looping ingredient item",
+				Logger_I("itemid", _:craft_SelectedItems[playerid][i][craft_selectedItemID]),
+				Logger_I("itemtype", _:GetItemType(craft_SelectedItems[playerid][i][craft_selectedItemID])));
 
 			if(!craft_Ingredients[craftset][i][craft_keepItem]) {
-				dbg("craft", "_craft_CraftSelected destroying ingredient item",
-					_i("itemid", _:craft_SelectedItems[playerid][i][craft_selectedItemID]),
-					_i("itemtype", _:GetItemType(craft_SelectedItems[playerid][i][craft_selectedItemID])));
+				Logger_Dbg("craft", "_craft_CraftSelected destroying ingredient item",
+					Logger_I("itemid", _:craft_SelectedItems[playerid][i][craft_selectedItemID]),
+					Logger_I("itemtype", _:GetItemType(craft_SelectedItems[playerid][i][craft_selectedItemID])));
 
 				GetItemContainerSlot(craft_SelectedItems[playerid][i][craft_selectedItemID], slot);
 				RemoveItemFromContainer(containerid, slot, .call = 0);
@@ -596,14 +596,14 @@ _craft_CraftSelected(playerid, CraftSet:craftset) {
 		}
 
 		new Item:itemid = CreateItem(craft_Result[craftset]);
-		dbg("craft", "_craft_CraftSelected created result item",
-			_i("itemid", _:itemid),
-			_i("result", _:craft_Result[craftset]));
+		Logger_Dbg("craft", "_craft_CraftSelected created result item",
+			Logger_I("itemid", _:itemid),
+			Logger_I("result", _:craft_Result[craftset]));
 
 		AddItemToContainer(containerid, itemid);
-		dbg("craft", "_craft_CraftSelected added result item to container",
-			_i("itemid", _:itemid),
-			_i("containerid", _:containerid));
+		Logger_Dbg("craft", "_craft_CraftSelected added result item to container",
+			Logger_I("itemid", _:itemid),
+			Logger_I("containerid", _:containerid));
 
 		CallLocalFunction("OnPlayerCrafted", "ddd", playerid, _:craftset, _:itemid);
 	}
@@ -621,16 +621,16 @@ _craft_CraftSelected(playerid, CraftSet:craftset) {
 	return 1;
 }
 
-_craft_CompareListToCraftSet(list[][e_selected_item_data], CraftSet:craftset) {
-	dbg("craft", "_craft_CompareListToCraftSet",
-		_i("craftset", _:craftset),
-		_i("size", craft_ItemCount[craftset]));
+_craft_CompareListToCraftSet(const list[][e_selected_item_data], CraftSet:craftset) {
+	Logger_Dbg("craft", "_craft_CompareListToCraftSet",
+		Logger_I("craftset", _:craftset),
+		Logger_I("size", craft_ItemCount[craftset]));
 
 	for(new i; i < craft_ItemCount[craftset]; i++) {
-		dbg("craft", "_craft_CompareListToCraftSet itemtype in craftset",
-			_i("index", i),
-			_i("itemtype", _:craft_Ingredients[craftset][i][craft_itemType]),
-			_i("selectedtype", _:list[i][craft_selectedItemType]));
+		Logger_Dbg("craft", "_craft_CompareListToCraftSet itemtype in craftset",
+			Logger_I("index", i),
+			Logger_I("itemtype", _:craft_Ingredients[craftset][i][craft_itemType]),
+			Logger_I("selectedtype", _:list[i][craft_selectedItemType]));
 
 		if(craft_Ingredients[craftset][i][craft_itemType] != list[i][craft_selectedItemType]) {
 			return 0;
